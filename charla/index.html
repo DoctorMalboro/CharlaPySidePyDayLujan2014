@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Aplicaciones e interfaces prácticas con PySide</title>
+
+        <meta name="author" content="Leandro Poblet">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'css/print/pdf.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section>
+                    <h2>Aplicaciones e interfaces prácticas con PySide</h2>
+                    <h4>PyDay Lujan 2014</h4>
+                </section>
+
+                <section>
+                    <h2>¿Quién les habla?</h2>
+
+                    <ul>
+                        <li>Leandro Poblet</li>
+                        <li>Programador en <b>MSA</b>.</li>
+                        <li>Pythonista desde los 16 años.</li>
+                        <li>Amante de Flask, Jinja y las buenas intenciones.</li>
+                        <li>Entusiasta de PySide (Motivo por el que doy esta charla hoy).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>¿Cómo se va a encarar esta charla?</h2>
+
+                    <ul>
+                        <li class="fragment">Comprendiendo conceptos básicos de Python.</li>
+                        <li class="fragment">Entendiendo las capacidades y funcionalidades de PySide.</li>
+                        <li class="fragment">Con ejemplos...</li>
+                        <li class="fragment">Ejemplos...</li>
+                        <li class="fragment">Y si no entendieron, <b>¡Más ejemplos!</b></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>¿Qué es PySide?</h2>
+
+                    <p>Según la wiki oficial de PySide:</p>
+
+                    <blockquote><b>Qt</b> es un framework multiplataforma para la creación de aplicaciones. Provee con una gran cantidad de librerias de servicios como abstracción de conexiones y manejo de XML, junto a una opulenta cantidad de prestaciones para la creación de interfaces, permitiendo a los desarrolladores de C++ escribir sus aplicaciones por única vez y correrlas sin modificar en distintos ambientes. <b>PySide apunta a proveer a los desarrolladores de Python acceso a las funcionalidades de Qt de la manera más natural posible.</b>*</blockquote>
+
+                    <small>* Para un usuario de Python.</small>
+                </section>
+
+                <section>
+                    <h2>¿Y PyQt? Similitudes y diferencias.</h2>
+
+                    <p><b>PyQt</b> es una implementación de Qt para Python, la primera de hecho, la cual tuvo su mayor despliegue luego de que fuera adquirida por Nokia junto a Qt.</p>
+                </section>
+
+                <section>
+                    <h2>Similitudes</h2>
+                    <ul>
+                        <li class="fragment">PySide y PyQt tienen el mismo estílo de programación:
+
+                            <pre><code class="python">from PyQt4.QtGui import QtWidget</pre></code>
+                            <p>En PySide sería:</p>
+                            <pre><code class="python">from PySide.QtGui import QtWidget</code></pre>
+                            <p>Lo cual nos permite utilizar <b><u>casi</u></b> cualquier código ejemplo de PyQt con PySide.</p>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Diferencias</h2>
+
+                    <ul>
+                        <li class="fragment">PySide no soporta Qt5 actualmente.</li>
+                        <li class="fragment">PySide implementa la versión 2 de la API de Qt. Funciones como <b>QStrings</b>, <b>QStringList</b> y <b>QVariants</b> no existen en PySide.</li>
+                        <li class="fragment">Diferencias en la convención de nombres de ciertas funciones.*</li>
+                    </ul>
+
+                    <p class="fragment">* Lo cual veremos más adelante.</p>
+                </section>
+
+                <section>
+                    <h2>Estructura</h2>
+
+                    <p>PySide tiene una estructura bastante clara e intuitiva de sus funcionalidades.</p>
+                    <p>Las que vamos a ver hoy son:</p>
+                    <ul>
+                        <li class="fragment"><b>QtCore:</b> Todas las funcionalidades no gráficas de Qt.</li>
+                        <li class="fragment"><b>QtGui:</b> Todas las funcionalidades gráficas de Qt.</li>
+                        <li class="fragment"><b>QtUiTools:</b> Integración a Qt Creator.</li>
+                        <li class="fragment"><b>QtWebKit:</b> Motor de navegador para integrar en la aplicación.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Primera aplicación</h2>
+
+                    <pre class="fragment"><code class="python"># -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import sys
+from PySide import QtGui
+
+app = QtGui.QApplication(sys.argv)
+
+widget = QtGui.QWidget()
+widget.resize(500, 150)
+widget.setWindowTitle('Ejemplo de PySide')
+widget.show()
+
+sys.exit(app.exec_())</code></pre>
+
+                    <p class="fragment"><i>Y voilá!</i></p>
+                </section>
+
+                <section>
+                    <h2>Aplicación básica con más color.</h2>
+
+                    <pre class="fragment"><code class="python"># -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import sys
+from PySide import QtGui
+
+app = QtGui.QApplication(sys.argv)
+
+widget = QtGui.QWidget()
+widget.resize(500, 150)
+widget.setWindowTitle('Aplicación con ícono')
+widget.setWindowIcon(QtGui.QIcon('icon.ico'))
+widget.show()
+
+sys.exit(app.exec_())</code></pre>
+
+                    <p class="fragment">Y en el extremo izquierdo veremos:</p>
+                    <img class="fragment" src="img\icon-dog.png" />
+                </section>
+
+                <section>
+                    <h2>Estructuremos un poquito...</h2>
+
+                    <p class="fragment">Es importante saber que <u>todas nuestra aplicaciones están conformadas por uno o más widgets</u>.</p>
+
+                    <p class="fragment">Por ende, utilizaremos una <b>clase</b> para mejorar la estructura y hacer el código más legible.</p>
+
+                    <p class="fragment">Dentro de esta clase, agregaremos un botón y luego lo invocaremos dentro del mismo script.</p>
+                </section>
+
+                <section>
+                    <h2>Instancia de la clase</h2>
+                    <pre class="fragment"><code class="python"># -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import sys
+from PySide import QtGui
+
+class Ejemplo3(QtGui.QWidget):
+
+    def __init__(self):
+        super(Ejemplo3, self).__init__()
+
+        self.iniciarGUI()</code></pre>
+
+                <aside class="notes">
+                    Super() es un función que nos permite referenciar indirectamente llamadas de la clase que hereda nuestra clase (QtGui.QWidget).
+                </aside>
+                </section>
+
+                <section>
+                    <h2>Función contenedora</h2>
+<pre class="fragment"><code class="python">    def iniciarGUI(self):
+
+        self.setToolTip('Esta interfaz tiene un botón.')
+
+        boton = QtGui.QPushButton('Ejemplo', self)
+        boton.setToolTip('Este botón se puede presionar.')
+        boton.resize(boton.sizeHint())
+        boton.move(50,50)
+
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Interfaz con botón')
+        self.show()</code></pre>
+                </section>
+
+                <section>
+                    <h2>Ejecutable</h2>
+<pre class="fragment"><code class="python">if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    ej3 = Ejemplo3()
+    sys.exit(app.exec_())</code></pre>
+                </section>
+
+                <section>
+                    <h2>Recapitulemos...</h2>
+
+                    <p class="fragment">Las aplicaciones pueden tener uno o más widgets.</p>
+                    <p class="fragment">Los widgets pueden contener botones, textos y demás interacciones. *</p>
+                    <p class="fragment">Estos los podemos crear como funciones en clases.</p>
+                    <p class="fragment">Dentro de estas clases, las funciones pueden interactuar entre si con señales. *</p>
+                    <p class="fragment"><small>* Que veremos más adelante.</small></p>
+                </section>
+
+                <section>
+                    <h2>Layout de la aplicación</h2>
+
+                    <p class="fragment">Dentro de la robusta API de Qt podemos encontrar formas fáciles de armar un layout para nuestra aplicación.</p>
+
+                    <p class="fragment">Los layout disponibles son:
+                        <ul>
+                            <li class="fragment"><b>Manual:</b> Basado en las coordenadas de la aplicación.</li>
+                            <li class="fragment"><b>En caja o <i>"Box"</i>:</b> la cual apila los distintos elementos del widget.</li>
+                            <li class="fragment"><b>O grilla o <i>"Grid"</i>:</b> la cual distribuye por filas y columnas los elementos.</li>
+                        </ul>
+                    </p>
+
+                    <p class="fragment">Veamos un ejemplo.</p>
+                </section>
+
+                <section>
+                    <h2>Layout manual</h2>
+
+                    <pre class="fragment"><code class="python">etiqueta = QtGui.QLabel('Layout', self)
+etiqueta.move(15, 10)
+
+explicando = QtGui.QLabel('sin', self)
+explicando.move(35, 40)
+
+layouts = QtGui.QLabel('orden', self)
+layouts.move(55, 70)</code></pre>
+                </section>
+
+                <section>
+                    <h2>Layout en caja</h2>
+
+                    <pre class="fragment"><code class="python">botonOK = QtGui.QPushButton('Ok')
+botonCancelar = QtGui.QPushButton('Cancelar')
+
+hbox = QtGui.QHBoxLayout()
+hbox.addStretch(1)
+hbox.addWidget(botonOK)
+hbox.addWidget(botonCancelar)
+
+vbox = QtGui.QVBoxLayout()
+vbox.addStretch(1)
+vbox.addLayout(hbox)
+
+self.setLayout(vbox)</code></pre>
+                </section>
+
+                <section>
+                    <h2>¿Lo mejor?</h2>
+
+                    <h3 class="fragment">¡Pueden convivir entre si!</h3>
+                </section>
+
+                <section>
+                    <h2>Señales</h2>
+
+                    <p class="fragment">¿De tránsito?</p>
+                    <img src="img\señal.png" class="fragment">
+                </section>
+
+                <section>
+                    <h2>Definición de señales</h2>
+
+                    <p>Las señales son eventos que ocurren en la interfaz cuando esta interactua con el usuario que utiliza el programa.</p>
+                    <p class="fragment">Estas señales pueden recibir y procesar datos, ejecutar comandos o conectar un widget con otro.</p>
+                    <p class="fragment">Sin las señales, las aplicaciones estarían inhabilitadas a interactuar con el usuario o entre los mismos widgets.</p>
+                </section>
+
+                <section>
+                    <h2>Composición de una señal</h2>
+
+                    <p>Las señales se componen de dos elementos:</p>
+
+                    <ul>
+                        <li class="fragment"><b>La señal</b> que es el tipo de evento por el cual queremos que nuestro programa responda.</li>
+                        <li class="fragment"><b>La ranura o <i>"slot"</i></b> es cualquier función de python que pueda ser invocada.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Ejemplo de una señal</h2>
+
+                    <p>Creamos dos elementos dentro de nuestra función, una línea de texto y una etiqueta.</p>
+                    <pre class="fragment"><code class="python">self.nombre = QtGui.QLineEdit()
+self.etiqueta = QtGui.QLabel('Hola!', self)</code></pre>
+                    <p class="fragment">Y agregaremos una señal que conecte a las dos.</p>
+                    <pre class="fragment"><code class="python">self.nombre.returnPressed.connect(self.saludar)</code></pre>
+                </section>
+
+                <section>
+                    <h2>En detalle</h2>
+
+                    <p class="fragment">Cree dos objetos: Un campo de texto <b>QLineEdit</b> llamado <b>nombre</b> y una etiqueta <b>QLabel</b> llamada <b>etiqueta</b>.</p>
+                    <p class="fragment">Llamé a nombre y le agegué un evento llamado <b>returnPressed</b>.</p>
+                    <p class="fragment"><b>returnPressed</b> va a llamar a la función <b>saludar</b> cada vez que presione enter dentro de el campo nombre.</p>
+                    <p class="fragment">La función <b>saludar</b> va a ejecutar el siguiente código:</p>
+                    <pre class="fragment"><code class="python">def saludar(self):
+
+    if self.nombre.text():
+        self.etiqueta.setText('Hola <b>%s</b>!' % self.nombre.text())</code></pre>
+                </section>
+
+                <section>
+                    <h2>Señal valueChanged.</h2>
+
+                    <p class="fragment">Además de <b>returnPressed</b>, tenemos la señal <b>valueChanged</b>.</p>
+                    <p class="fragment">Esta nos permite ejecutar acciones cuando el valor que algún widget contiene cambia.</p>
+                    <p class="fragment">Esto significa, que lo podemos aplicar en campos de texto, combos, sliders e inclusive botones.</p>
+                    <p class="fragment">Simplemente hay que instanciar dos objetos para que interactuen entre sí.</p>
+                    <pre class="fragment"><code class="python">lcd = QtGui.QLCDNumber(self)
+sld = QtGui.QSlider(QtCore.Qt.Horizontal, self)</code></pre>
+                </section>
+
+                <section>
+                    <p class="fragment">Si queremos que interactuen entre sí, sólo necesitamos conectarlos a través de una señal.</p>
+                    <pre class="fragment"><code class="python">sld.valueChanged.connect(lcd.display)</code></pre>
+                    <p class="fragment">Y luego, el resultado.</p>
+                </section>
+
+                <section>
+                    <h2>Señal clicked</h2>
+
+                    <p class="fragment">Clicked es una señal que se utiliza para cualquier evento dónde se haga click con el mouse.</p>
+                    <p class="fragment">En una interfaz, esta señal es muy utilizada principalmente sobre los botones y menúes de opciones.</p>
+                </section>
+
+                <section>
+                    <h2>Ejemplo de señal clicked</h2>
+
+                    <p class="fragment">Hay dos objetos en el programa, un <b>botón</b> y una <b>etiqueta</b> la cual cambiará de valor cada vez que hagamos click en el botón.</p>
+                    <p class="fragment">O sea, un contador. <span class="fragment">¡DUH!</span></p>
+                    <pre class="fragment"><code class="python">self.muestra = QtGui.QLabel('0 clicks')
+boton_contador = QtGui.QPushButton('Contar')
+self.contador = 0
+
+boton_contador.clicked.connect(self.contar)</code></pre>
+                </section>
+
+                <section>
+                    <h2>Función invocada</h2>
+
+                    <pre class="fragment"><code class="python">def contar(self):
+    self.contador += 1
+    self.muestra.setText('%d clicks' % self.contador)</code></pre>
+
+                    <p class="fragment">Y tenemos un.... <span class="fragment">¡Contador!</span></p>
+                </section>
+
+                <section>
+                    <h1>Widgets</h1>
+                    <h2 class="fragment">Parte 2: Los widgets contraatacan.</h2>
+                </section>
+
+                <section>
+                    <h2>QFont</h2>
+
+                    <p class="fragment"><b>QFont</b> nos permite cambiar el estílo de etiquetas, botones y menúes.</p>
+                    <p class="fragment">Puede ser el tamaño, color, fuente o atributos (itálica, subrayado, negrita) de un texto.</p>
+                    <p class="fragment">También se le puede aplicar a texto enriquecido.</p>
+
+                    <pre class="fragment"><code class="python">texto_1 = QtGui.QLabel('Tamaño')
+fuente_texto_1 = QtGui.QFont('Arial', 72)
+texto_1.setFont(fuente_texto_1)
+texto_2 = QtGui.QLabel('Fuente')
+fuente_texto_2 = QtGui.QFont('Comic Sans MS', 18)
+texto_2.setFont(fuente_texto_2)
+texto_3 = QtGui.QLabel('Atributos')
+fuente_texto_3 = QtGui.QFont('Arial', 18,
+        QtGui.QFont.Bold,
+        italic=True)
+texto_3.setFont(fuente_texto_3)</code></pre>
+                </section>
+
+                <section>
+                    <h2>QProgressBar</h2>
+
+                    <p class="fragment"><b>QProgressBar</b> nos permite crear barras de progreso.</p>
+                    <p class="fragment">Estas son útiles para actualizaciones y descargas.</p>
+                    <p class="fragment">A través de señales, como vimos anteriormente, podemos invocarlas.</p>
+                    <pre class="fragment"><code class="python">self.progreso = QtGui.QProgressBar(self)
+self.progreso.setGeometry(30, 40, 200, 25)
+
+self.btn = QtGui.QPushButton('Comenzar', self)
+self.btn.move(40, 80)
+self.btn.clicked.connect(self.empieza)
+
+self.timer = QtCore.QBasicTimer()
+self.paso = 0</code></pre>
+
+                </section>
+
+                <section>
+
+                    <h2>QProgressBar: Señal</h2>
+
+                    <pre class="fragment"><code class="python">def timerEvent(self, e):    
+    if self.paso >= 100:
+        self.timer.stop()
+        self.btn.setText('Finished')
+        return
+    self.paso = self.paso + 1
+    self.progreso.setValue(self.paso)
+
+def empieza(self):
+
+    if self.timer.isActive():
+        self.timer.stop()
+        self.btn.setText('Comezar')
+    else:
+        self.timer.start(100, self)
+        self.btn.setText('Terminar')</code></pre>
+
+                </section>
+
+                <section>
+                    <h2>QFileDialog</h2>
+
+                    <p class="fragment"><b>QFileDialog</b> nos permite abrir archivos y luego ejecutar tareas en base a ellos.</p>
+                    <p class="fragment">Pueden ser texto, imágenes, audio, video o de cualquier.</p>
+                    <p class="fragment">También podemos filtrar qué archivos queremos abrir.</p>
+
+                    <pre class="fragment"><code class="python">self.boton = QtGui.QPushButton('Abrir texto')
+self.boton.clicked.connect(self.abrir_archivo)
+self.etiqueta = QtGui.QLabel('')</code></pre>
+
+                    <p class="fragment">Y ejecutamos la siguiente señal:</p>
+
+                    <pre class="fragment"><code class="python">def abrir_archivo(self):
+    archivo_abierto = QtGui.QFileDialog.getOpenFileName(self,
+        'Abrir archivo', QtCore.QDir.currentPath(),
+        'Archivos de texto (*.txt)')
+
+    if archivo_abierto:
+        archivo_abierto = QtCore.QFile(archivo_abierto[0])
+        if archivo_abierto.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text):
+            texto = str(archivo_abierto.readAll())
+            self.etiqueta.setText(texto)</code></pre>
+                </section>
+
+                <section>
+                    <h2>QPixmap</h2>
+
+                    <p class="fragment"><b>QPixmap</b> nos permite abrir imágenes dentro de nuestra aplicación.</p>
+                    <p class="fragment">También podemos leer su información y alterarla.</p>
+                    <p class="fragment">Puede abrirse con la aplicación o dentro de la aplicación.</p>
+
+                    <pre class="fragment"><code class="python">self.boton = QtGui.QPushButton('Abrir imagen')
+self.boton.clicked.connect(self.abrir_imagen)
+self.imagen_etiqueta = QtGui.QLabel()
+self.imagen_etiqueta.setBackgroundRole(QtGui.QPalette.Base)
+self.imagen_etiqueta.setSizePolicy(QtGui.QSizePolicy.Ignored,
+    QtGui.QSizePolicy.Ignored)</code></pre>
+
+                </section>
+                
+                <section>
+                    <h2>Señal de QPixmap</h2>
+
+                    <pre class="fragment"><code class="python">def abrir_imagen(self):
+    imagen_abierta = QtGui.QFileDialog.getOpenFileName(self,
+        'Abrir imagen', QtCore.QDir.currentPath())
+
+    if imagen_abierta:
+        imagen = QtGui.QImage(imagen_abierta[0])
+        if imagen.isNull():
+            print imagen.isNull()
+
+        self.imagen_etiqueta.setPixmap(
+            QtGui.QPixmap.fromImage(imagen))
+        self.imagen_etiqueta.setScaledContents(True)</code></pre>
+                </section>
+
+                <section>
+                    <h2>QWebKit</h2>
+
+                    <p class="fragment"><b>QWebKit</b> nos permite utilizar el motor WebKit para renderizar páginas web.</p>
+                    <p class="fragment">Podemos instalar plugins, acceder al tipo de MIME y obtener el historial de páginas que hemos visitado.</p>
+                    <p class="fragment">También nos permite embeber web y desktop de manera no-híbrida.</p>
+
+                    <pre class="fragment"><code class="python">self.barra_de_navegacion = QtGui.QLineEdit()
+self.navegador = QtWebKit.QWebView()
+self.barra_de_navegacion.returnPressed.connect(self.ir_a_pagina)</code></pre>
+
+                    <p class="fragment">Y lo podemos conectar así:</p>
+
+                    <pre class="fragment"><code class="python">def ir_a_pagina(self):
+    self.navegador.load(QtCore.QUrl(self.barra_de_navegacion.text()))</code></pre>
+                </section>
+
+                <section>
+                    <h2>Menues y toolbars</h2>
+
+                    <p class="fragment">Los menues y toolbars nos permiten crear comandos y acciones que interactuan entre la interfaz o los distintos widgets que pueden conformar una aplicación.</p>
+                    <p class="fragment">Estos pueden contener widgets o eventos que se disparan al ejecutarse.</p>
+
+                    <pre class="fragment"><code class="python">abrir_archivo = QtGui.QAction('Abrir archivo', self)
+abrir_archivo.setShortcut('Ctrl+A')
+abrir_archivo.setStatusTip('Abre un archivo de texto')
+abrir_archivo.triggered.connect(self.abrir_archivo)
+guardar_archivo = QtGui.QAction('Guardar archivo', self)
+guardar_archivo.setShortcut('Ctrl+G')
+guardar_archivo.setStatusTip('Guardar un archivo')
+guardar_archivo.triggered.connect(self.guardar_archivo)
+guardar_archivo_como = QtGui.QAction('Guardar archivo como', self)
+guardar_archivo_como.setShortcut('Ctrl+Shift+G')
+guardar_archivo_como.setStatusTip('Guarda un archivo de texto'
+    ' con otro nombre o extension')
+guardar_archivo_como.triggered.connect(self.guardar_archivo_como)
+salir = QtGui.QAction('Salir', self)
+salir.setShortcut('Ctrl+Q')
+salir.setStatusTip('Salir del programa')
+salir.triggered.connect(QtCore.QCoreApplication.instance().quit)</code></pre>
+                </section>
+
+                <section>
+                    <h2>Añadir al programa</h2>
+
+                    <pre class="fragment"><code class="python">menu = self.menuBar()
+menu_archivo = menu.addMenu('&Archivo')
+menu_archivo.addAction(abrir_archivo)
+menu_archivo.addAction(guardar_archivo)
+menu_archivo.addAction(guardar_archivo_como)
+menu_archivo.addAction(salir)</code></pre>
+                </section>
+
+                <section>
+                    <h2>Barra de estado</h2>
+
+                    <p class="fragment">Las barras de estado nos permiten notificar cambios en nuestro programa.</p>
+                    <p class="fragment">Se pueden conectar entre las distintas señales y comunicar estados al usuario.</p>
+                    <p class="fragment">En el programa se ejecuta así:</p>
+
+                    <pre class="fragment"><code class="python">self.statusBar().showMessage('Iniciado')</code></pre>
+                </section>
+
+                <section>
+                    <h2>Y podemos ver un programa entero así</h2>
+
+                    <p><img src="img/ejemplo_editor.png"></p>
+                </section>
+
+                <section>
+                    <h2>Usando Qt Creator</h2>
+
+                    <p class="fragment"><b>Qt Creator</b> nos permite crear una interfaz de Qt de manera gráfica y explicita.</p>
+                    <p class="fragment"><b>PySide</b> soporta el traspaso del archivo .ui (el archivo que contiene los estílos) a la aplicación en Python.</p>
+                    <p class="fragment">Para eso, PySide trae <b>pyside-uic</b>, un comando que nos permite pasar nuestro archivo .ui a .py a través de la línea de comandos.</p>
+
+                    <pre class="fragment"><code class="shell">pyside-uic.exe ejemplo.ui -o ui_ejemplo_14.py</code></pre>
+                </section>
+
+                <section>
+                    <h2>Integración a nuestra aplicación</h2>
+
+                    <p class="fragment">Una vez terminado nuestro diseño de interfaz, la integración es muy sencilla.</p>
+
+                    <pre class="fragment"><code class="python"># -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import sys
+
+from PySide import QtCore, QtGui
+from ui_ejemplo_14 import *
+
+class Ejemplo14(QtGui.QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(Ejemplo14, self).__init__(parent)
+        self.setupUi(self)
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    window = Ejemplo14()
+    window.show()
+    sys.exit(app.exec_())</code></pre>
+                </section>
+
+                <section>
+                    <h2>En resumen</h2>
+
+                    <p class="fragment">Hoy vimos:</p>
+                    <ul class="fragment">
+                        <li class="fragment">Elementos básicos</li>
+                        <li class="fragment">Señales</li>
+                        <li class="fragment">Widgets</li>
+                        <li class="fragment">Herramientas de diseño</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Recursos</h2>
+
+                    <ul>
+                        <li>Tutorial básico (en ingles): <a href="http://zetcode.com/gui/pysidetutorial/">http://zetcode.com/gui/pysidetutorial/</a></li>
+                        <li>Ejemplos oficiales de PySide: <a href="https://github.com/PySide/Examples">https://github.com/PySide/Examples</a></li>
+                        <li>Documentación de PySide: <a href="http://pyside.github.io/docs/pyside/index.html">http://pyside.github.io/docs/pyside/index.html</a></li>
+                        <li>StackOverflow: <a href="http://stackoverflow.com/questions/tagged/pyside">http://stackoverflow.com/questions/tagged/pyside</a></li>
+                        <li>Esta charla: <a href="https://github.com/DoctorMalboro/CharlaPySidePyDayLujan2014">https://github.com/DoctorMalboro/CharlaPySidePyDayLujan2014</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>¿Preguntas?</h1>
+                </section>
+
+                <section>
+                    <h2>Contacto</h2>
+
+                    <p>Twitter: @DoctorMalboro</p>
+                    <p>Email: leandrodrhouse@gmail.com</p>
+                </section>
+
+                <section>
+                    <h3>Y si esta charla te gustó...</h3>
+                    <h3 class="fragment">¡La que viene, te va a encantar!</span></h3>
+
+                    <p class="fragment"><img src="img/Lionel.jpg"></p>
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: true,
+                center: true,
+                backgroundTransition: 'fade',
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'fade', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
